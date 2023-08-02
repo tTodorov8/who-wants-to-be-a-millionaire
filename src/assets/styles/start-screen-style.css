@@ -1,0 +1,55 @@
+.start-screen-wrapper {
+  width: 1920px;
+  height: 963px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  background-image: url(../images/milionare-background2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.start-button {
+  margin-top: 640px;
+  width: 640px;
+  height: 60px;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #212529;
+}
+
+.start-button h2 {
+  color: #ffffff;
+}
+
+.button-wrapper .dropdown-wrapper {
+  text-align: center;
+  margin-top: 20px;
+}
+.button-wrapper .dropdown-wrapper .drop-down-button {
+  margin-top: 5px;
+  width: 640px;
+  height: 60px;
+  border-radius: 25px;
+  text-align: center;
+  line-height: 60px;
+  /* display: flex; */
+  /* justify-content: center; */
+  background-color: #212529;
+  border: none;
+}
+
+.button-wrapper .dropdown-wrapper .drop-down-button img {
+  width: 30px;
+  height: 30px;
+  margin-top: 15px;
+  float: right;
+}
+
+.dropdown-wrapper .drop-down-content {
+  display: none;
+}
