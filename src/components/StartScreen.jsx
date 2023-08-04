@@ -4,22 +4,31 @@ import StartButton from "./Buttons/StartButton";
 import CategoryDropDownButton from "./Buttons/CategoryDropDownButton";
 import DifficultyDropDownButton from "./Buttons/DifficultyDropDownButton";
 import QuestionsScreen from "./QuestionsScreen";
-function StartScreen(props) {
+import { useContext } from "react";
+import QuestionContextStore from "../context/QuestionsContextStore";
+
+function StartScreen() {
   const [isStarted, setIsStarted] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [category, setCategory] = useState("");
+  const {
+    questions,
+    categories,
+    difficulties,
+    getQuestions,
+    choosenCategory,
+    choosenDifficulty,
+    setChoosenCategory,
+    setChoosenDifficulty,
+  } = useContext(QuestionContextStore);
+
   function handleStartGame() {
+    getQuestions();
     setIsStarted(true);
-    console.log(isStarted);
   }
 
   useEffect(() => {
     setIsVisible(!isStarted);
   }, [isStarted]);
-
-  function handleCategoryChange(e) {
-    setCategory(e.target.value);
-  }
 
   return (
     <>
@@ -28,23 +37,33 @@ function StartScreen(props) {
         style={{ display: isVisible ? "flex" : "none" }}
       >
         <div className="buttons-wrapper">
-          <StartButton questions={props.questions} onStart={handleStartGame} />
+          <StartButton questions={questions} onStart={handleStartGame} />
           <div className="dropdown-wrapper">
             <h2>Category</h2>
-            <CategoryDropDownButton questions={props.questions} />
-            {/* <DropDownButton text="category" questions={props.questions} /> */}
+            <CategoryDropDownButton
+              questions={questions}
+              categories={categories}
+              choosenCategory={choosenCategory}
+              setChoosenCategory={setChoosenCategory}
+            />
+            {/* <DropDownButton text="category" questions={questions} /> */}
           </div>
           <div className="dropdown-wrapper">
             <h2>Difficulty:</h2>
-            <DifficultyDropDownButton questions={props.questions} />
+            <DifficultyDropDownButton
+              questions={questions}
+              difficulties={difficulties}
+              choosenDifficulty={choosenDifficulty}
+              setChoosenDifficulty={setChoosenDifficulty}
+            />
 
-            {/* <DropDownButton questions={props.questions} /> */}
+            {/* <DropDownButton questions={questions} /> */}
           </div>
         </div>
       </div>
       {/*  */}
       {/* Question screen when the start game button is clicked */}
-      {isStarted ? <QuestionsScreen questions={props.questions} /> : ""}
+      {isStarted ? <QuestionsScreen questions={questions} /> : ""}
     </>
   );
 }

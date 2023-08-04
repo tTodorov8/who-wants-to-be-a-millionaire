@@ -3,16 +3,6 @@ import downArrow from "../../assets/images/down-arrow.png";
 import { useState, useRef } from "react";
 
 function DifficultyDropDownButton(props) {
-  const filteredDifficulty = () => {
-    const uniqueDifficulty = [];
-    props.questions.forEach((question) => {
-      if (!uniqueDifficulty.includes(question.difficulty)) {
-        uniqueDifficulty.push(question.difficulty);
-      }
-    });
-    console.log(uniqueDifficulty);
-    return uniqueDifficulty;
-  };
   const [isVisible, setIsVisible] = useState(false);
   const [difficultyButtonText, setDifficultyButtonText] =
     useState("difficulty");
@@ -30,16 +20,16 @@ function DifficultyDropDownButton(props) {
         className="drop-down-content"
         style={{ display: isVisible ? "block" : "none" }}
       >
-        <div className="categories-list">
+        <div className="categories-list difficulty">
           <ul>
-            {filteredDifficulty().map((element, id) => {
+            {props.difficulties.map((element, id) => {
               return (
                 <li
                   key={id}
                   onClick={(e) => {
                     setDifficultyButtonText(e.target.innerText);
+                    props.setChoosenDifficulty(e.target.innerText);
                     difficultyButtonRef.innerHTML = difficultyButtonText;
-                    console.log(difficultyButtonRef.innerText);
                     handleDropDown();
                   }}
                 >

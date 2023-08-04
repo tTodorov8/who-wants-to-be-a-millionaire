@@ -2,20 +2,12 @@ import React from "react";
 import downArrow from "../../assets/images/down-arrow.png";
 import { useState, useRef } from "react";
 
-function CategoryDropDownButton(props) {
-  const filteredCategories = () => {
-    const uniqueCategories = [];
-    props.questions.forEach((question) => {
-      if (!uniqueCategories.includes(question.category)) {
-        uniqueCategories.push(question.category);
-      }
-    });
-    console.log(uniqueCategories);
-    return uniqueCategories;
-  };
-
+function CategoryDropDownButton({
+  categories,
+  choosenCategory,
+  setChoosenCategory,
+}) {
   const [isVisible, setIsVisible] = useState(false);
-  const [buttonText, setButtonText] = useState("category");
   const buttonRef = useRef("");
   function handleDropDown() {
     setIsVisible((visible) => !visible);
@@ -28,23 +20,22 @@ function CategoryDropDownButton(props) {
         onClick={handleDropDown}
         ref={buttonRef}
       >
-        {buttonText}
+        Category
         <img src={downArrow} alt="asdf" />
       </button>
       <div
         className="drop-down-content"
         style={{ display: isVisible ? "block" : "none" }}
       >
-        <div className="categories-list">
+        <div className="categories-list category">
           <ul>
-            {filteredCategories().map((element, id) => {
+            {categories.map((element, id) => {
               return (
                 <li
                   key={id}
                   onClick={(e) => {
-                    setButtonText(e.target.innerText);
-                    buttonRef.innerHTML = buttonText;
-                    console.log(buttonText);
+                    setChoosenCategory(e.target.innerText);
+                    buttonRef.innerHTML = choosenCategory;
                     handleDropDown();
                   }}
                 >
