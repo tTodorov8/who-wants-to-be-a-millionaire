@@ -107,6 +107,7 @@ body {
   right: 5%;
   padding: 5px;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .timer {
@@ -144,7 +145,7 @@ body {
   width: 790px;
   height: 60px;
   background-color: #c9cacd80;
-
+  cursor: pointer;
   border-radius: 30px;
   color: #020103;
   display: flex;
@@ -152,4 +153,8 @@ body {
   padding-left: 20px;
   /* justify-content: center; */
   font-size: 18px;
+}
+
+.disable {
+  opacity: 0.2;
 }

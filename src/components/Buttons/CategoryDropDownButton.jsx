@@ -1,6 +1,6 @@
 import React from "react";
 import downArrow from "../../assets/images/down-arrow.png";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 function CategoryDropDownButton({
   categories,
@@ -8,19 +8,14 @@ function CategoryDropDownButton({
   setChoosenCategory,
 }) {
   const [isVisible, setIsVisible] = useState(false);
-  const buttonRef = useRef("");
   function handleDropDown() {
     setIsVisible((visible) => !visible);
   }
 
   return (
     <>
-      <button
-        className="drop-down-button"
-        onClick={handleDropDown}
-        ref={buttonRef}
-      >
-        Category
+      <button className="drop-down-button" onClick={handleDropDown}>
+        {choosenCategory || "Category"}
         <img src={downArrow} alt="asdf" />
       </button>
       <div
@@ -35,7 +30,6 @@ function CategoryDropDownButton({
                   key={id}
                   onClick={(e) => {
                     setChoosenCategory(e.target.innerText);
-                    buttonRef.innerHTML = choosenCategory;
                     handleDropDown();
                   }}
                 >

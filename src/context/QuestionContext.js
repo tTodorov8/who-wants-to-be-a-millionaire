@@ -9,15 +9,19 @@ function QuestionContext(props) {
   const [choosenCategory, setChoosenCategoryOne] = useState("");
   const [choosenDifficulty, setChoosenDifficultyOne] = useState("");
 
-  const filteredCategories = (categories) => {
-    const uniqueCategories = [];
-    categories.forEach((category) => {
-      if (!uniqueCategories.includes(category)) {
-        uniqueCategories.push(category);
-      }
-    });
-    return uniqueCategories;
-  };
+  const updateCategories = useCallback(
+    () =>
+      QuestionServices.getCategoryes().then((cats) => {
+        if (!categories.length) {
+          setCategories(cats);
+        }
+      }),
+    [categories.length]
+  );
+
+  useEffect(() => {
+    updateCategories();
+  }, [updateCategories]);
 
   const filteredDifficulties = (difficulties) => {
     const uniqueDifficulty = [];
@@ -29,24 +33,32 @@ function QuestionContext(props) {
     return uniqueDifficulty;
   };
 
-  const getQuestions = function (questions) {
-    if (questions !== undefined) {
-      setQuestions(questions);
+  const getQuestions = useCallback(
+    function (questions) {
+      if (questions !== undefined) {
+        setQuestions(questions);
 
-      const uniqueCategories = filteredCategories(
-        questions.map((x) => x.category)
-      );
+        if (!difficulties.length) {
+          const uniqueDifficulties = filteredDifficulties(
+            questions.map((x) => x.difficulty)
+          );
 
-      const uniqueDifficulties = filteredDifficulties(
-        questions.map((x) => x.difficulty)
-      );
+          setDifficulties(uniqueDifficulties);
+        }
+      }
+    },
+    [difficulties.length]
+  );
 
-      setCategories(uniqueCategories);
-      setDifficulties(uniqueDifficulties);
-      setChoosenCategoryOne(categories[0]);
-      setChoosenDifficultyOne(difficulties[0]);
-    }
-  };
+  const updateQuestions = useCallback(
+    function () {
+      return QuestionServices.getApiQuestions(
+        choosenCategory,
+        choosenDifficulty
+      ).then((questions) => getQuestions(questions.results));
+    },
+    [choosenCategory, choosenDifficulty, getQuestions]
+  );
 
   function setChoosenCategory(params) {
     setChoosenCategoryOne(params);
@@ -65,15 +77,9 @@ function QuestionContext(props) {
     setQuestions(localQuestions);
   }
 
-  const updateQuestions = useCallback(function () {
-    return QuestionServices.getApiQuestions().then((questions) =>
-      getQuestions(questions.results)
-    );
-  }, []);
-
   useEffect(() => {
     updateQuestions();
-  }, [updateQuestions]);
+  }, [choosenDifficulty, choosenCategory, updateQuestions]);
 
   return (
     <QuestionContextStore.Provider

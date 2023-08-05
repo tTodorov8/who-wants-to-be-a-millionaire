@@ -22,8 +22,10 @@ function StartScreen() {
   } = useContext(QuestionContextStore);
 
   function handleStartGame() {
-    getQuestions();
-    setIsStarted(true);
+    if (questions.length > 0) {
+      getQuestions();
+      setIsStarted(true);
+    }
   }
 
   useEffect(() => {
@@ -46,7 +48,6 @@ function StartScreen() {
               choosenCategory={choosenCategory}
               setChoosenCategory={setChoosenCategory}
             />
-            {/* <DropDownButton text="category" questions={questions} /> */}
           </div>
           <div className="dropdown-wrapper">
             <h2>Difficulty:</h2>
@@ -56,8 +57,6 @@ function StartScreen() {
               choosenDifficulty={choosenDifficulty}
               setChoosenDifficulty={setChoosenDifficulty}
             />
-
-            {/* <DropDownButton questions={questions} /> */}
           </div>
         </div>
       </div>

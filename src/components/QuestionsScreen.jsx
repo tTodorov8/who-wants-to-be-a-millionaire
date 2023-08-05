@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-function QuestionsScreen(props) {
-  console.log(props);
+function QuestionsScreen({ questions }) {
   const [randomQuestion, setRandomQuestion] = useState({});
   const [correctAnswer, setCorrectAnswer] = useState("");
+  const [endGame, setEndGame] = useState(false);
   const [incorrectAnswers, setIncorrectAnswers] = useState([]);
   const [allAnswers, setAllAnswers] = useState([]);
   const [points, setPoints] = useState(0);
@@ -13,9 +13,9 @@ function QuestionsScreen(props) {
   // get random question from the api
   useEffect(() => {
     const localRandomQuestion =
-      props.questions[Math.floor(Math.random() * props.questions.length)];
+      questions[Math.floor(Math.random() * questions.length)];
     setRandomQuestion(localRandomQuestion);
-  }, [props.questions]);
+  }, [questions]);
 
   // set the correct and incorrect answers
   useEffect(() => {
@@ -24,6 +24,7 @@ function QuestionsScreen(props) {
       setIncorrectAnswers(randomQuestion.incorrect_answers);
     }
   }, [
+    randomQuestion,
     incorrectAnswers,
     randomQuestion.correct_answer,
     randomQuestion.incorrect_answers,
@@ -32,16 +33,19 @@ function QuestionsScreen(props) {
   useEffect(() => {
     let timeInterval;
 
-    if (timer > 0) {
+    if (timer > 0 && !endGame && !correctAnswer) {
       timeInterval = setInterval(() => {
         setTimer((time) => time - 1);
       }, 1000);
     }
 
     return () => clearInterval(timeInterval);
-  }, [timer]);
+  }, [timer, endGame, correctAnswer]);
 
-  const handleClearInterval = () => {};
+  const handleIncorectAnswer = () => {
+    setEndGame(true);
+  };
+
   // set array with all the possible answers
   function allRandomAnswers(answers) {
     for (let i = 0; i < answers.length; i++) {
@@ -56,55 +60,67 @@ function QuestionsScreen(props) {
     allRandomAnswers(answers);
     setAllAnswers(answers);
   }, [correctAnswer, incorrectAnswers, randomQuestion]);
-  console.log(correctAnswer);
-  console.log(allAnswers);
 
-  console.log(typeof allAnswers);
+  const handleAnswerClick = (e, answer) => {
+    if (answer === correctAnswer) {
+      e.target.style.backgroundColor = "#00b05090";
+      return setPoints(points + 1);
+    } else {
+      handleIncorectAnswer();
+      e.target.style.backgroundColor = "#c0000090";
+    }
+  };
   return (
     <>
       <div className="points">{points}</div>
-      {/* <button
-        className="next-question"
-        onClick={useEffect(() => {
-          setRandomQuestion();
-          props.questions[Math.floor(Math.random() * props.questions.length)];
-        }, [props.questions])}
-      >
-        Next
-      </button> */}
-
+      {endGame && (
+        <button
+          hidden={!endGame}
+          className="next-question"
+          onClick={() => {
+            setRandomQuestion(
+              questions[Math.floor(Math.random() * questions.length)]
+            );
+          }}
+        >
+          {" "}
+          New Game
+        </button>
+      )}
+      {!endGame && (
+        <button
+          hidden={endGame}
+          className="next-question"
+          onClick={() => {
+            setRandomQuestion(
+              questions[Math.floor(Math.random() * questions.length)]
+            );
+          }}
+        >
+          {" "}
+          Next
+        </button>
+      )}
       <div className="timer">{timer}</div>
       <div className="question-answer-wrapper">
         <div className="question-holder">{randomQuestion.question}</div>
         <div className="answers-holder">
           {allAnswers.map((answer, id) => {
-            // if (answer === correctAnswer) {
-            //   return <div className="correct">{answer}</div>;
-            // }
             return (
               <div
                 className={
                   answer === correctAnswer ? "answer correct" : "answer wrong"
                 }
                 key={id}
-                onClick={(e) => {
-                  if (answer === correctAnswer) {
-                    e.target.style.backgroundColor = "#00b05090";
-                    return setPoints(points + 1);
-                  } else {
-                    e.target.style.backgroundColor = "#c0000090";
-                  }
-                }}
+                onClick={(e) => !endGame && handleAnswerClick(e, answer)}
               >
                 {answer}
               </div>
             );
           })}
-          {/* <div className="answer b">Answer here</div>
-        <div className="answer c">Answer here</div>
-        <div className="answer d">Answer here</div> */}
         </div>
       </div>
+      )
     </>
   );
 }

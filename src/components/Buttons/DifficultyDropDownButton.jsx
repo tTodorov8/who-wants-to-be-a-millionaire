@@ -1,19 +1,21 @@
 import React from "react";
 import downArrow from "../../assets/images/down-arrow.png";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
-function DifficultyDropDownButton(props) {
+function DifficultyDropDownButton({
+  setChoosenDifficulty,
+  choosenDifficulty,
+  difficulties,
+}) {
   const [isVisible, setIsVisible] = useState(false);
-  const [difficultyButtonText, setDifficultyButtonText] =
-    useState("difficulty");
-  const difficultyButtonRef = useRef("");
+
   function handleDropDown() {
     setIsVisible((visible) => !visible);
   }
   return (
     <>
       <button className="drop-down-button" onClick={handleDropDown}>
-        {difficultyButtonText}
+        {choosenDifficulty || "Difficulty"}
         <img src={downArrow} alt="asdf" />
       </button>
       <div
@@ -22,14 +24,12 @@ function DifficultyDropDownButton(props) {
       >
         <div className="categories-list difficulty">
           <ul>
-            {props.difficulties.map((element, id) => {
+            {difficulties.map((element, id) => {
               return (
                 <li
                   key={id}
                   onClick={(e) => {
-                    setDifficultyButtonText(e.target.innerText);
-                    props.setChoosenDifficulty(e.target.innerText);
-                    difficultyButtonRef.innerHTML = difficultyButtonText;
+                    setChoosenDifficulty(e.target.innerText);
                     handleDropDown();
                   }}
                 >
